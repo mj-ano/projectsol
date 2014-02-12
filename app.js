@@ -47,7 +47,7 @@ app.configure('production', function() {
 app.get('/', routes.index);
 
 var io = require('socket.io').listen(app);
-app.listen(12080);
+app.listen(80);
 io.sockets.on('connection', function(socket) {
     socket.on('valjson', function(d) {
         resultSet = compare(d.msg, d.msg1);
