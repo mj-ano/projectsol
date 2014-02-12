@@ -1,0 +1,79 @@
+script(type="text/javascript")
+  var socket = io.connect();
+  var grid;
+  var wordsNow = null;
+  var columns = [
+    {id: "tag", name: "Element", field: "tag", sortable: true, width: 350},
+    {id: "isNul", name: "Is Empty", field: "isNul", sortable: true, width: 235},
+    {id: "parent", name: "Parent Element", field: "parent", sortable: true, width: 300},
+    {id: "type", name: "Data Type", field: "type", sortable: true, width: 235},
+
+  ];
+
+  var options = {
+    enableCellNavigation: true,
+    enableColumnReorder: false
+  };
+
+  socket.on('resultjson', function (data) {
+    grid = new Slick.Grid("#myGrid", data, columns, options);
+    grid.render();
+    grid.onClick.subscribe(function (e) {
+      var cell = grid.getCellFromEvent(e);
+      if (grid.getColumns()[cell.cell].id == "tag") {
+        if (!grid.getEditorLock().commitCurrentEdit()) {
+          return;
+        }
+        console.log(e);
+        $("#source").highlightTextarea('setWords', [e.srcElement.textContent]);
+        $("#diff").highlightTextarea('setWords', [e.srcElement.textContent]);
+        //var lineHeight = parseInt($("#source").css('line-height'));
+        //$("#source").scrollTop(20 * lineHeight);
+        e.stopPropagation();
+      }
+    });
+    });
+
+  $(document).ready( function() {
+      $('#validateJson').click( function() {
+       try {
+          source = JSON.parse($("#source").val());
+             try {
+                diff = JSON.parse($("#diff").val());
+                } catch (err) {
+                    $("#result").html("message : Validate JSON is not a JSON");
+                    return;
+                }
+        } catch (err) {
+            $("#result").html("message : Source Validate is not a JSON");
+            return;
+        }
+        $("#result").html("COMPARE RESULT");
+        socket.emit('valjson', {msg:source,msg1:diff});
+      });
+         $("textarea").highlightTextarea({
+             words: [wordsNow],
+             color: "#99f",
+             resizable: true
+        });
+
+    });
+body
+  .hero-unit(style='padding-bottom: 20px;')
+    .row-fluid
+      .span6
+        span.label.label-info Source JSON
+      .span6
+        span.label.label-info Validate JSON
+    .row-fluid
+      .span6
+        textarea#source(style='margin: 0px 0px 10px; height: 208px; width: 430px;')
+      .span6
+        textarea#diff(style='margin: 0px 0px 10px; height: 208px; width: 430px;')
+    .row-fluid
+      button#validateJson.btn.btn-large.btn-primary.center(type='button') Check
+    .row-fluid
+      .alert.alert-info(style='margin-top: 50px;')
+       span#result COMPARE RESULT
+    .row-fluid
+      #myGrid(style='width: 100%; height: 500px;')
