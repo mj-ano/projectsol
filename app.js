@@ -42,12 +42,16 @@ app.configure('production', function() {
     app.use(express.errorHandler());
 });
 
+var ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
+var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 // Routes
 
 app.get('/', routes.index);
 
 var io = require('socket.io').listen(app);
-app.listen(80);
+app.listen( port, ipaddress, function() {
+    console.log((new Date()) + ' Server is listening on port 8080');
+});
 io.sockets.on('connection', function(socket) {
     socket.on('valjson', function(d) {
         resultSet = compare(d.msg, d.msg1);
