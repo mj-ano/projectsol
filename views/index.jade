@@ -10,10 +10,7 @@ script(type="text/javascript")
 
   ];
 
-  var options = {
-    enableCellNavigation: true,
-    enableColumnReorder: false
-  };
+  var options = {};
 
   socket.on('resultjson', function (data) {
     grid = new Slick.Grid("#myGrid", data, columns, options);
