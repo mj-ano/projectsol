@@ -118,4 +118,4 @@ io.sockets.on('connection', function(socket) {
         return result;
     }
 });
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+console.log("Express server listening on port 80");
