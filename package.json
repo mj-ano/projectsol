@@ -12,7 +12,7 @@
     "main": "app.js",
     "devDependencies": {},
     "scripts": {
-        "test": "wow"
+    "start": "node app.js"
     },
     "author": "Manoj Shunmugam",
     "license": "BSD-2-Clause"
