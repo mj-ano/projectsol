@@ -122,4 +122,4 @@ io.sockets.on('connection', function(socket) {
         return result;
     }
 });
-console.log("Express server listening on port 80");
+console.log("Express server listening on port 8080");
